@@ -3,6 +3,8 @@ from fastapi.responses import JSONResponse
 import os
 
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
+
 
 # Import our service functions (we'll create these files next)
 from service import preprocesss
@@ -14,6 +16,14 @@ app = FastAPI(title="Excel Preprocessing & Analysis API")
 os.makedirs("temp_files", exist_ok=True)
 os.makedirs("processed_data", exist_ok=True)
 os.makedirs("analysis_reports", exist_ok=True)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows your Vercel frontend to receive responses
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/preprocess")
 async def preprocess_file(file: UploadFile = File(...)):
